@@ -45,5 +45,24 @@ namespace HttpclientResilienceWrap.Extensions
 
             return services;
         }
+
+        /// <summary>
+        /// Registers a named <see cref="System.Net.Http.HttpClient"/> and a keyed
+        /// <see cref="HttpClientService"/> using only default resilience settings
+        /// (no BaseUri, no ApiKey). Callers supply the target URI per request via
+        /// <see cref="HttpRequestParameter.Uri"/>.
+        /// <para>
+        /// Resolve via <c>[FromKeyedServices("clientName")] IHttpClientService</c>.
+        /// </para>
+        /// </summary>
+        public static IServiceCollection InstallHttpClient(
+            this IServiceCollection services,
+            string clientName)
+        {
+            var config = new DefaultServiceConfig { ClientName = clientName };
+            return services.InstallHttpClient(config);
+        }
+
+        private sealed class DefaultServiceConfig : ExternalServiceConfig;
     }
 }
