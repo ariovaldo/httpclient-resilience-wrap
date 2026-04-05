@@ -10,6 +10,34 @@ A resilient HTTP client library for **.NET 10**, built on **Polly v8**, that pro
 - **Correlation ID** – auto-generated or caller-supplied ID attached to every outbound request header  
 - **Two-tier configuration** – service-wide defaults via `ExternalServiceConfig`, per-request overrides via `HttpRequestParameter`
 
+**Visual overview (pipelines, sequences, response contract):** [docs/resilience-flow.html](docs/resilience-flow.html) — open in the browser locally, or view the same path on GitHub.
+
+### Request flow (sequence)
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant C as Caller
+  participant R as "Retry (outer)"
+  participant B as Circuit breaker
+  participant T as "Timeout (per attempt)"
+  participant H as HttpClient
+  participant S as External API
+
+  C->>+R: GetAsync / PostAsync / …
+  R->>+B: execute attempt
+  B->>+T: execute attempt
+  T->>+H: SendAsync
+  H->>+S: HTTP request
+  S-->>-H: response
+  H-->>-T: build HttpApiResponse
+  T-->>-B: HttpApiResponse
+  B-->>-R: HttpApiResponse
+  R-->>-C: HttpApiResponse
+
+  Note over R,S: On transient outcomes (e.g. 5xx, 429, 408, network errors), Retry may backoff and re-enter from Circuit breaker. If the circuit is open, the library returns a synthetic 503 envelope without calling S.
+```
+
 ## Installation
 
 Add a project reference to this library from your application:
