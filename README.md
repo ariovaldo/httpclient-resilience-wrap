@@ -1,5 +1,8 @@
 # Httpclient Resilience Wrap
 
+[![CI / CD](https://github.com/ariovaldo/httpclient-resilience-wrap/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/ariovaldo/httpclient-resilience-wrap/actions/workflows/ci-cd.yml)
+[![NuGet](https://img.shields.io/nuget/v/HttpclientResilienceWrap.svg)](https://www.nuget.org/packages/HttpclientResilienceWrap)
+
 A resilient HTTP client library for **.NET 10**, built on **Polly v8**, that provides retry, circuit breaker, timeout, and correlation ID propagation out of the box.
 
 ## Features
@@ -44,10 +47,16 @@ A fully working Minimal API that exercises every feature is available in [`Httpc
 
 ## Installation
 
-Add a project reference to this library from your application:
+Install from NuGet:
 
 ```shell
-dotnet add path/to/YourApp.csproj reference path/to/HttpclientResilienceWrap/HttpclientResilienceWrap.csproj
+dotnet add package HttpclientResilienceWrap
+```
+
+Or via the Package Manager Console:
+
+```powershell
+Install-Package HttpclientResilienceWrap
 ```
 
 ## Quick start: `appsettings.json` and `Program.cs`
