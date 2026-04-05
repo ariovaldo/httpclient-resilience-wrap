@@ -19,7 +19,7 @@
 
         /// <summary>
         /// When true and no correlation ID is provided per request via
-        /// <see cref="HttpclientResilienceWrap.Models.HttpRequestParameters.CorrelationId"/>,
+        /// <see cref="HttpclientResilienceWrap.Extensions.HttpRequestParameter.CorrelationId"/>,
         /// a new <see cref="System.Guid"/> is generated automatically. Defaults to true.
         /// </summary>
         public bool GenerateIfAbsent { get; set; } = true;

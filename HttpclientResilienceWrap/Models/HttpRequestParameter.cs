@@ -56,7 +56,7 @@
 
         /// <summary>
         /// Per-request correlation ID. When set, takes precedence over the auto-generated value
-        /// controlled by <see cref="HttpclientResilienceWrap.Options.CorrelationIdOptions.GenerateIfAbsent"/>.
+        /// controlled by <see cref="HttpclientResilienceWrap.Options.CorrelationIdOption.GenerateIfAbsent"/>.
         /// Use this to propagate an existing correlation ID received from an upstream caller.
         /// </summary>
         public string? CorrelationId { get; set; }
