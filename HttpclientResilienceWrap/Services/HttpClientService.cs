@@ -14,10 +14,12 @@ using System.Text.RegularExpressions;
 namespace HttpclientResilienceWrap.Services
 {
     /// <summary>
-    /// http client service implementation
+    /// Default <see cref="IHttpClientService"/> implementation that wraps every request
+    /// in a Polly pipeline of Retry → Circuit Breaker → Timeout.
     /// </summary>
-    /// <param name="_logger"></param>
-    /// <param name="_httpClientFactory"></param>
+    /// <param name="_logger">Logger instance.</param>
+    /// <param name="_httpClientFactory">Factory used to create named <see cref="System.Net.Http.HttpClient"/> instances.</param>
+    /// <param name="_serviceConfig">Service-level configuration (base URI, resilience settings, correlation ID options).</param>
     public sealed class HttpClientService(
         ILogger<HttpClientService> _logger,
         IHttpClientFactory _httpClientFactory,
@@ -82,13 +84,10 @@ namespace HttpclientResilienceWrap.Services
         }
 
         /// <summary>
-        /// SendAsync method to send an HTTP request with the specified method
+        /// Resolves the final <see cref="Uri"/> for the request, combining
+        /// <see cref="HttpRequestParameter.Path"/> with <see cref="Options.ExternalServiceConfig.BaseUri"/>
+        /// or falling back to <see cref="HttpRequestParameter.Uri"/>.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="method"></param>
-        /// <param name="HttpRequestParameter"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
         private Uri ResolveRequestUri(HttpRequestParameter HttpRequestParameter)
         {
             if (!string.IsNullOrEmpty(HttpRequestParameter.Path))

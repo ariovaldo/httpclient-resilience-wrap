@@ -6,6 +6,10 @@ using Microsoft.Extensions.Logging;
 
 namespace HttpclientResilienceWrap.Extensions
 {
+    /// <summary>
+    /// Extension methods on <see cref="Microsoft.Extensions.DependencyInjection.IServiceCollection"/>
+    /// for registering resilient <see cref="System.Net.Http.HttpClient"/> instances backed by Polly pipelines.
+    /// </summary>
     public static class HttpClientExtension
     {
         /// <summary>
