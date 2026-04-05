@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="HttpclientResilienceWrap/HttpclientResilienceWrap.csproj" />
+  <Project Path="HttpclientResilienceWrap.Tests/HttpclientResilienceWrap.Tests.csproj" />
+</Solution>
