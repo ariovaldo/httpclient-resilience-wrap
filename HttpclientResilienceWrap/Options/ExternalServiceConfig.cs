@@ -36,7 +36,7 @@
         /// <summary>
         /// Default number of retries for all requests to this service. Defaults to 0 (no retries).
         /// Set to a positive value to enable exponential back-off retries.
-        /// Can be overridden per request via <see cref="HttpclientResilienceWrap.Models.HttpRequestParameters.Retry"/>.
+        /// Can be overridden per request via <see cref="HttpclientResilienceWrap.Extensions.HttpRequestParameter.Retry"/>.
         /// </summary>
         public int Retry { get; set; } = 0;
 
@@ -72,7 +72,7 @@
         /// <summary>
         /// Correlation ID options. When enabled, attaches a correlation ID header to every
         /// outbound request for distributed tracing. Can be overridden per request via
-        /// <see cref="HttpclientResilienceWrap.Models.HttpRequestParameters.CorrelationId"/>.
+        /// <see cref="HttpclientResilienceWrap.Extensions.HttpRequestParameter.CorrelationId"/>.
         /// </summary>
         public CorrelationIdOption CorrelationId { get; set; } = new();
 
