@@ -1,9 +1,11 @@
 # Httpclient Resilience Wrap
 
 [![CI / CD](https://github.com/ariovaldo/httpclient-resilience-wrap/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/ariovaldo/httpclient-resilience-wrap/actions/workflows/ci-cd.yml)
-[![NuGet](https://img.shields.io/nuget/v/HttpclientResilienceWrap.svg)](https://www.nuget.org/packages/HttpclientResilienceWrap)
+[![NuGet](https://img.shields.io/nuget/vpre/HttpclientResilienceWrap.svg)](https://www.nuget.org/packages/HttpclientResilienceWrap)
 
-A resilient HTTP client library for **.NET 10**, built on **Polly v8**, that provides retry, circuit breaker, timeout, and correlation ID propagation out of the box.
+A resilient HTTP client library for **.NET 8+**, built on **Polly v8**, that provides retry, circuit breaker, timeout, and correlation ID propagation out of the box.
+
+> **Supported frameworks:** .NET 8 (LTS) · .NET 9 · .NET 10
 
 ## Features
 
@@ -13,7 +15,7 @@ A resilient HTTP client library for **.NET 10**, built on **Polly v8**, that pro
 - **Correlation ID** – auto-generated or caller-supplied ID attached to every outbound request header  
 - **Two-tier configuration** – service-wide defaults via `ExternalServiceConfig`, per-request overrides via `HttpRequestParameter`
 
-**Visual overview (pipelines, sequences, response contract):** [docs/resilience-flow.html](docs/resilience-flow.html) — open in the browser locally, or view the same path on GitHub.
+**Visual overview (pipelines, sequences, response contract):** [docs/resilience-flow.html](https://htmlpreview.github.io/?https://github.com/ariovaldo/httpclient-resilience-wrap/blob/main/docs/resilience-flow.html) — opens the interactive diagram in a new tab.
 
 ### Request flow (sequence)
 
@@ -47,7 +49,7 @@ A fully working Minimal API that exercises every feature is available in [`Httpc
 
 ## Installation
 
-Install from NuGet:
+Install the latest version from [NuGet](https://www.nuget.org/packages/HttpclientResilienceWrap):
 
 ```shell
 dotnet add package HttpclientResilienceWrap
@@ -58,6 +60,8 @@ Or via the Package Manager Console:
 ```powershell
 Install-Package HttpclientResilienceWrap
 ```
+
+> **Tip:** For preview versions, append `--prerelease` (CLI) or `-IncludePrerelease` (Package Manager Console). Check the NuGet badge above for the latest available version.
 
 ## Quick start: `appsettings.json` and `Program.cs`
 
