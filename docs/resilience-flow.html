@@ -681,6 +681,13 @@ return result.Content;</pre>
         <td>config only</td>
         <td>How long the circuit stays open before a half-open probe</td>
       </tr>
+      <tr><td colspan="4" style="background:#1e293b20;color:#475569;font-size:11px;font-weight:700;padding:8px 12px;letter-spacing:.06em;">DEBUG LOGGING</td></tr>
+      <tr>
+        <td class="td-prop">EnableDebugLogging</td>
+        <td class="td-def">false</td>
+        <td><span class="td-over">per-request override</span></td>
+        <td>Enable debug logging (curl + sanitized response) for all requests to this service. Per-request <code>HttpRequestParameter.EnableDebugLogging</code> also activates it — either being <code>true</code> is enough</td>
+      </tr>
       <tr><td colspan="4" style="background:#1e293b20;color:#475569;font-size:11px;font-weight:700;padding:8px 12px;letter-spacing:.06em;">REQUEST</td></tr>
       <tr>
         <td class="td-prop">Path</td>
@@ -697,8 +704,8 @@ return result.Content;</pre>
       <tr>
         <td class="td-prop">EnableDebugLogging</td>
         <td class="td-def">false</td>
-        <td><span class="td-over">per-request</span></td>
-        <td>Logs curl equivalent + response body at <code>Debug</code> level (requires log level config)</td>
+        <td><span class="td-over">per-request override</span></td>
+        <td>Logs curl equivalent + response body at <code>Debug</code> level. Also configurable at service level via <code>ExternalServiceConfig</code> — when either is <code>true</code>, logging is active</td>
       </tr>
     </tbody>
   </table>
@@ -706,6 +713,12 @@ return result.Content;</pre>
   <div class="tip" style="margin-top:20px;">
     <strong>Registration:</strong> call <code>InstallHttpClient(myConfig)</code> once per API and resolve <code>IHttpClientService</code> with <strong>keyed DI</strong>
     (<code>[FromKeyedServices(nameof(MyApiConfig))]</code> or <code>GetRequiredKeyedService&lt;IHttpClientService&gt;(clientName)</code>), matching <code>ClientName</code> and the named <code>IHttpClientFactory</code> client.
+  </div>
+
+  <div class="tip" style="margin-top:12px;">
+    <strong>Config-less:</strong> for simple or ad-hoc calls, use <code>InstallHttpClient("MyService")</code> — no config class, no <code>appsettings.json</code> section.
+    Default resilience settings apply (no retries, 10s timeout, circuit breaker enabled). Supply the target URI per request via <code>HttpRequestParameter.Uri</code>.
+    Resolve with <code>[FromKeyedServices("MyService")]</code>.
   </div>
 </div>
 
@@ -787,7 +800,7 @@ return result.Content;</pre>
     <div class="flow-box">
       <div class="fb-label">Wire</div>
       <div class="fb-name">HTTP Body</div>
-      <div class="fb-detail">Sent over the wire. Also logged as sanitized curl if <code>EnableDebugLogging = true</code>.</div>
+      <div class="fb-detail">Sent over the wire. Also logged as sanitized curl if <code>EnableDebugLogging = true</code> (config or per-request).</div>
     </div>
   </div>
 </div>
@@ -863,7 +876,7 @@ return result.Content;</pre>
     Sensitive fields auto-redacted in debug logs
   </div>
   <p style="font-size:12px;color:#64748b;margin-bottom:14px;max-width:860px;">
-    When <code>EnableDebugLogging = true</code> the response body and request body (curl) are logged at <code>Debug</code> level.
+    When <code>EnableDebugLogging = true</code> (set at service level via <code>ExternalServiceConfig</code> or per-request) the response body and request body (curl) are logged at <code>Debug</code> level.
     Before writing to the logger, the content is sanitized: truncated to 1000 chars, then all known sensitive JSON fields are replaced with <code>***</code>.
   </p>
 
@@ -964,10 +977,10 @@ return result.Content;</pre>
     <div class="wc-icon">🔒</div>
     <div class="wc-title">Safe debug logging out of the box</div>
     <div class="wc-body">
-      Enable <code>EnableDebugLogging = true</code> per request and get a full curl command + sanitized
-      response body at <code>Debug</code> level. Sensitive fields (<code>password</code>, <code>token</code>,
-      <code>apikey</code>, <code>email</code>, <code>ssn</code>, …) are <strong>automatically redacted</strong>
-      — no risk of leaking secrets to logs.
+      Set <code>EnableDebugLogging = true</code> at service level (all requests) or per request and get
+      a full curl command + sanitized response body at <code>Debug</code> level. Sensitive fields
+      (<code>password</code>, <code>token</code>, <code>apikey</code>, <code>email</code>, <code>ssn</code>, …)
+      are <strong>automatically redacted</strong> — no risk of leaking secrets to logs.
     </div>
   </div>
 
