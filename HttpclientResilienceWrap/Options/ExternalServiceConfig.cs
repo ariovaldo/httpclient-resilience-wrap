@@ -63,6 +63,13 @@
         public CircuitBreakerOption CircuitBreaker { get; set; } = new();
 
         /// <summary>
+        /// Enable debug logging for all requests to this service. When <c>true</c>, logs an equivalent
+        /// curl command and sanitized response body at <c>Debug</c> level.
+        /// Can be overridden per request via <see cref="HttpclientResilienceWrap.Extensions.HttpRequestParameter.EnableDebugLogging"/>.
+        /// </summary>
+        public bool EnableDebugLogging { get; set; } = false;
+
+        /// <summary>
         /// Correlation ID options. When enabled, attaches a correlation ID header to every
         /// outbound request for distributed tracing. Can be overridden per request via
         /// <see cref="HttpclientResilienceWrap.Models.HttpRequestParameters.CorrelationId"/>.
