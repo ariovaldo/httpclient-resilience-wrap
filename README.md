@@ -71,6 +71,7 @@ Any property you omit keeps the default from the [Configuration reference](#conf
     "Retry": 3,
     "RetryDelayMilliseconds": 1000,
     "TimeoutSeconds": 10,
+    "EnableDebugLogging": true,
     "Handler": {
       "LifetimeMinutes": 5,
       "MaxConnectionsPerServer": 20,
@@ -151,14 +152,39 @@ builder.Services.InstallHttpClient<NotificationApiConfig>(notificationConfig);
 
 ## Dependency injection
 
-### `InstallHttpClient<TConfig>`
+### `InstallHttpClient` overloads
 
-Extension method on `IServiceCollection` (`HttpclientResilienceWrap.Extensions.HttpClientExtension`):
+Extension methods on `IServiceCollection` (`HttpclientResilienceWrap.Extensions.HttpClientExtension`):
 
-1. Registers a **named** `HttpClient` with `IHttpClientFactory` using **`config.ClientName`** as the factory name, and applies `BaseUri` plus `HttpHandlerOption` (handler lifetime, connection limit, redirects).
-2. Registers **`IHttpClientService`** as **keyed scoped** with the **same key** (`config.ClientName`), wiring `IHttpClientFactory` and the captured **`TConfig`** instance into `HttpClientService`.
+| Overload | Usage |
+|---------|-------|
+| `InstallHttpClient<TConfig>(config)` | Full config — binds from `appsettings.json` or inline object |
+| `InstallHttpClient(clientName)` | Config-less — default resilience settings, URI supplied per request |
 
-Call **`InstallHttpClient` once per external API** (one config instance per registration). Different `ClientName` values (or different config types with default names) stay fully isolated: separate named client, handler, and resilience state.
+Both overloads:
+
+1. Register a **named** `HttpClient` with `IHttpClientFactory` using `ClientName` as the factory key.
+2. Register **`IHttpClientService`** as **keyed scoped** with the same key.
+
+Call **once per external API**. Different `ClientName` values stay fully isolated: separate connection pool, handler, and resilience state.
+
+### Config-less registration
+
+When you don't need a config class or `appsettings.json` section — just pass a name and supply the URI per request:
+
+```csharp
+builder.Services.InstallHttpClient("MyService");
+```
+
+Resolve with the same string key and set the target via `HttpRequestParameter.Uri`:
+
+```csharp
+var response = await http.GetAsync<MyDto>(
+    new HttpRequestParameter { Uri = new Uri("https://api.example.com/data") },
+    ct);
+```
+
+This uses default resilience settings (no retries, 10s timeout, circuit breaker enabled). Useful for simple or ad-hoc calls where a full config class would be overkill.
 
 ### Registration without JSON
 
@@ -274,6 +300,7 @@ public sealed class MyService(
 | Retry | int | 0 | Number of retries after the first attempt. Set to 0 to disable retries; use a positive value (e.g. 3) to enable exponential back-off |
 | RetryDelayMilliseconds | int | 500 | Base delay (ms) for exponential back-off. Example with Retry = 3: 500ms → 1000ms → 2000ms (~3.5s total wait between attempts) |
 | TimeoutSeconds | int | 10 | Per-attempt timeout in seconds |
+| EnableDebugLogging | bool | false | Enable debug logging (curl + sanitized response) for all requests to this service. Can be overridden per request |
 | Handler | HttpHandlerOption | (see below) | Connection pool and redirect settings |
 | CircuitBreaker | CircuitBreakerOption | (see below) | Circuit breaker settings |
 | CorrelationId | CorrelationIdOption | (see below) | Correlation ID header settings |
@@ -321,7 +348,7 @@ public sealed class MyService(
 | Timeout | int? | Timeout in seconds for this request only |
 | CorrelationId | string? | Correlation ID from an upstream caller |
 | ClearHeaders | bool | Clears default `HttpClient` headers before sending |
-| EnableDebugLogging | bool | Logs an equivalent **curl** command at **Debug** level |
+| EnableDebugLogging | bool | Logs an equivalent **curl** command + sanitized response at **Debug** level. Also configurable at service level via `ExternalServiceConfig` |
 
 ---
 

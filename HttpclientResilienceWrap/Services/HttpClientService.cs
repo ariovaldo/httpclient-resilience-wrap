@@ -232,7 +232,9 @@ namespace HttpclientResilienceWrap.Services
             if (correlationId is not null && !request.Headers.Contains(_serviceConfig.CorrelationId.HeaderName))
                 request.Headers.TryAddWithoutValidation(_serviceConfig.CorrelationId.HeaderName, correlationId);
 
-            if (HttpRequestParameter.EnableDebugLogging)
+            var debugLogging = HttpRequestParameter.EnableDebugLogging || _serviceConfig.EnableDebugLogging;
+
+            if (debugLogging)
                 _logger.LogDebug("Curl: {Curl}", CreateCurl(request, HttpRequestParameter.Body));
 
             using var response = await client.SendAsync(request, cancellationToken);
@@ -366,7 +368,7 @@ namespace HttpclientResilienceWrap.Services
 
             var content = await response.Content.ReadAsStringAsync();
 
-            if (HttpRequestParameter.EnableDebugLogging)
+            if (HttpRequestParameter.EnableDebugLogging || _serviceConfig.EnableDebugLogging)
             {
                 var sanitizedContent = SanitizeForLogging(content);
                 _logger.LogDebug("Response Content: {Content}", sanitizedContent);
