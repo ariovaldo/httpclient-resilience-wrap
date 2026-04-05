@@ -38,6 +38,10 @@ sequenceDiagram
   Note over R,S: On transient outcomes (e.g. 5xx, 429, 408, network errors), Retry may backoff and re-enter from Circuit breaker. If the circuit is open, the library returns a synthetic 503 envelope without calling S.
 ```
 
+## Demo API
+
+A fully working Minimal API that exercises every feature is available in [`HttpclientResilienceWrap.Demo`](HttpclientResilienceWrap.Demo/README.md). Run `dotnet run` inside that folder and open Swagger to try retry, circuit breaker, timeout, correlation ID, typed/untyped responses, and config-less registration.
+
 ## Installation
 
 Add a project reference to this library from your application:
