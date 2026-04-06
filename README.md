@@ -15,7 +15,7 @@ A resilient HTTP client library for **.NET 8+**, built on **Polly v8**, that pro
 - **Correlation ID** – auto-generated or caller-supplied ID attached to every outbound request header  
 - **Two-tier configuration** – service-wide defaults via `ExternalServiceConfig`, per-request overrides via `HttpRequestParameter`
 
-**Visual overview (pipelines, sequences, response contract):** <a href="https://htmlpreview.github.io/?https://github.com/ariovaldo/httpclient-resilience-wrap/blob/main/docs/resilience-flow.html" target="_blank">docs/resilience-flow.html</a> — opens the interactive diagram in a new tab.
+**Visual overview (pipelines, sequences, response contract):** [docs/resilience-flow.html](https://htmlpreview.github.io/?https://github.com/ariovaldo/httpclient-resilience-wrap/blob/main/docs/resilience-flow.html) — opens the interactive diagram in a new tab.
 
 ### Request flow (sequence)
 
